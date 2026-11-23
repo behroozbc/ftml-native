@@ -1,0 +1,33 @@
+{
+  "name": "@flexiformal/ftml-native",
+  "version": "0.0.1",
+  "description": "Native web components for rendering FTML content",
+  "homepage": "https://github.com/FlexiFormal/ftml-ts#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FlexiFormal/ftml-ts.git"
+  },
+  "license": "GPL-3.0-or-later",
+  "author": "Dennis Müller",
+  "types": "./dist/index.d.mts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.mts",
+      "import": "./dist/index.mjs"
+    }
+  },
+  "files": ["dist"],
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit",
+    "demo": "npm run build && vite demo --config vite.config.ts --host 127.0.0.1"
+  },
+  "dependencies": {
+    "@flexiformal/ftml": "=0.0.34"
+  },
+  "devDependencies": {
+    "tsup": "^8.5.1",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.8"
+  }
+}

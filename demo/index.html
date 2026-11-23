@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#183b34" />
+    <title>FTML Native | Live Preview</title>
+    <script type="module" src="/main.ts"></script>
+</head>
+
+<body>
+    <header class="topbar">
+        <a class="wordmark" href="/" aria-label="FTML Native demo home">
+            <span class="mark">F</span>
+            <span>FTML <span class="wordmark-light">NATIVE</span></span>
+        </a>
+        <div class="topbar-note"><span class="live-dot"></span> COMPONENT PLAYGROUND</div>
+    </header>
+
+    <main class="workspace">
+        <aside class="controls">
+            <div class="section-label">01 / SOURCE</div>
+            <h1>Render FTML</h1>
+
+            <form id="render-form">
+                <label class="field-label" for="backend">Backend URL</label>
+                <input id="backend" name="backend" type="url" value="/ftml-api" spellcheck="false" required />
+
+                <label class="field-label" for="uri">FTML URI</label>
+                <textarea id="uri" name="uri" rows="3" spellcheck="false"
+                    required>http://mathhub.info?a=sTeX/MathTutorial&amp;d=textbook&amp;l=en</textarea>
+
+                <fieldset class="mode-fieldset">
+                    <legend class="field-label">Element</legend>
+                    <div class="segmented">
+                        <label><input type="radio" name="mode" value="document" checked /><span>Document</span></label>
+                        <label><input type="radio" name="mode" value="fragment" /><span>Fragment</span></label>
+                    </div>
+                </fieldset>
+
+                <div class="section-label options-label">02 / CONFIGURATION</div>
+                <label class="toggle-row">
+                    <span><strong>Hovers</strong><small>Interactive notation details</small></span>
+                    <input id="hovers" type="checkbox" checked />
+                    <span class="switch" aria-hidden="true"></span>
+                </label>
+                <label class="toggle-row">
+                    <span><strong>Table of contents</strong><small>Request generated TOC</small></span>
+                    <input id="toc" type="checkbox" checked />
+                    <span class="switch" aria-hidden="true"></span>
+                </label>
+                <label class="toggle-row">
+                    <span><strong>Mark sections</strong><small>Apply a native DOM wrapper</small></span>
+                    <input id="sections" type="checkbox" />
+                    <span class="switch" aria-hidden="true"></span>
+                </label>
+
+                <button class="render-button" type="submit">
+                    <span>Render preview</span><span aria-hidden="true">&#8594;</span>
+                </button>
+            </form>
+
+            <p class="footnote">External FTML backend required for live content.</p>
+        </aside>
+
+        <section class="preview" aria-label="FTML preview">
+            <div class="preview-bar">
+                <div class="preview-title"><span class="preview-icon">&lt;/&gt;</span> LIVE OUTPUT</div>
+                <div id="status" class="status" role="status" aria-live="polite">
+                    <span class="status-dot"></span><span id="status-text">Ready to render</span>
+                </div>
+            </div>
+            <div id="stage" class="stage">
+                <div class="empty-state" id="empty-state">
+                    <div class="empty-glyph">F</div>
+                    <p>Awaiting document</p>
+                </div>
+                <ftml-document id="ftml-document"  allow-hovers hidden></ftml-document>
+                <ftml-fragment id="ftml-fragment"  allow-hovers hidden></ftml-fragment>
+            </div>
+            <div class="preview-footer">
+                <span>WEB COMPONENTS</span><span id="context-state">STANDALONE</span>
+            </div>
+        </section>
+    </main>
+
+
+</body>
+
+</html>
