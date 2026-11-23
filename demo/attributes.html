@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FTML Native - Attribute-only demo</title>
+    <script type="module" src="/attributes.ts"></script>
+</head>
+<body>
+    <header class="topbar">
+        <div class="wordmark"><span class="mark">F</span><span>FTML <span class="wordmark-light">ATTRIBUTES</span></span></div>
+    </header>
+
+    <main class="workspace" style="grid-template-columns: 300px minmax(0, 1fr);">
+        <aside class="controls">
+            <div class="section-label">ATTRIBUTE-ONLY DEMO</div>
+            <h1>Load FTML</h1>
+
+            <label class="field-label" for="backend">Backend URL</label>
+            <input id="backend" type="url" value="https://mathhub.info" spellcheck="false" />
+
+            <button id="load" class="render-button" type="button">
+                <span>Initialize backend</span><span aria-hidden="true">&#8594;</span>
+            </button>
+
+            <div id="status" class="status" data-state="ready" role="status" aria-live="polite">
+                <span class="status-dot"></span><span>Ready</span>
+            </div>
+        </aside>
+
+        <section class="preview">
+            <div class="preview-bar"><div class="preview-title">ATTRIBUTE EXAMPLES</div></div>
+            <div class="stage">
+                <section>
+                    <h2>Document attributes</h2>
+                    <ftml-document
+                        html="&lt;section&gt;&lt;h3&gt;Document attributes&lt;/h3&gt;&lt;p&gt;Rendered with separate HTML attributes.&lt;/p&gt;&lt;/section&gt;"
+                        uri="http://mathhub.info?a=sTeX/MathTutorial&amp;d=textbook&amp;l=en"
+                        allow-hovers
+                        allow-fullscreen
+                        toc="get"
+                        highlight-style="colored"></ftml-document>
+                </section>
+
+                <section>
+                    <h2>Document URI attributes</h2>
+                    <ftml-document
+                        html="&lt;section&gt;&lt;h3&gt;URI and markup attributes&lt;/h3&gt;&lt;p&gt;The markup, URI, and configuration are independent attributes.&lt;/p&gt;&lt;/section&gt;"
+                        uri="http://mathhub.info?a=sTeX/MathTutorial&amp;d=textbook&amp;l=en"
+                        allow-hovers="true"
+                        allow-fullscreen="true"
+                        show-content="true"
+                        toc="get"></ftml-document>
+                </section>
+
+                <section>
+                    <h2>Inline HTML fragment</h2>
+                    <ftml-fragment
+                        html="&lt;section&gt;&lt;h3&gt;Inline FTML&lt;/h3&gt;&lt;p&gt;Rendered from attributes.&lt;/p&gt;&lt;/section&gt;"
+                        allow-hovers="false"
+                        show-content></ftml-fragment>
+                </section>
+
+                <section>
+                    <h2>Nested setup context</h2>
+                    <ftml-setup allow-hovers toc="get">
+                        <ftml-fragment
+                            html="&lt;p&gt;Nested fragment rendered with separate HTML attributes.&lt;/p&gt;"
+                            allow-hovers="false"></ftml-fragment>
+                    </ftml-setup>
+                </section>
+            </div>
+        </section>
+    </main>
+</body>
+</html>

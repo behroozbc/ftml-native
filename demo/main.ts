@@ -45,6 +45,8 @@ form.addEventListener("submit", async (event) => {
     const uri = String(formData.get("uri")).trim();
     const mode = String(formData.get("mode"));
     const markSections = (form.querySelector<HTMLInputElement>("#sections")!).checked;
+    const configSource = form.querySelector<HTMLSelectElement>("#config-source")!.value;
+    const highlightStyle = form.querySelector<HTMLSelectElement>("#highlight-style")!.value;
 
     submitButton.disabled = true;
     contextState.textContent = "STANDALONE";
@@ -84,12 +86,41 @@ form.addEventListener("submit", async (event) => {
         fragmentViewer.hidden = mode !== "fragment";
 
         const viewer = mode === "fragment" ? fragmentViewer : documentViewer;
-        viewer.config = config;
+        if (configSource === "attributes") {
+            viewer.config = {};
+            if (config.allowHovers) viewer.setAttribute("allow-hovers", "true");
+            else viewer.setAttribute("allow-hovers", "false");
+
+            viewer.setAttribute("toc", config.toc === "Get" ? "get" : "none");
+            if (highlightStyle) viewer.setAttribute("highlight-style", highlightStyle);
+            else viewer.removeAttribute("highlight-style");
+        } else {
+            viewer.config = config;
+            viewer.removeAttribute("allow-hovers");
+            viewer.removeAttribute("toc");
+            viewer.removeAttribute("highlight-style");
+        }
 
         if (mode === "fragment") {
-            fragmentViewer.fragment = { type: "FromBackend", uri };
+            if (configSource === "attributes") {
+                fragmentViewer.fragment = undefined;
+                fragmentViewer.removeAttribute("html");
+                fragmentViewer.setAttribute("uri", uri);
+            } else {
+                fragmentViewer.removeAttribute("uri");
+                fragmentViewer.removeAttribute("html");
+                fragmentViewer.fragment = { type: "FromBackend", uri };
+            }
         } else {
-            documentViewer.document = { type: "FromBackend", uri };
+            if (configSource === "attributes") {
+                documentViewer.document = undefined;
+                documentViewer.removeAttribute("html");
+                documentViewer.setAttribute("uri", uri);
+            } else {
+                documentViewer.removeAttribute("uri");
+                documentViewer.removeAttribute("html");
+                documentViewer.document = { type: "FromBackend", uri };
+            }
         }
 
         setStatus("Rendering requested", "loading");

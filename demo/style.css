@@ -70,6 +70,8 @@ input[type="url"], textarea {
 }
 input:focus, textarea:focus { outline: 2px solid #98b831; outline-offset: 1px; }
 textarea { resize: vertical; overflow-wrap: anywhere; }
+.demo-select { width: 100%; min-height: 38px; border: 1px solid var(--rule); border-radius: 2px; padding: 8px 10px; color: #263d35; background: #fff; font: 12px var(--mono); }
+.demo-config-json { margin-bottom: 2px; font-size: 11px; }
 .mode-fieldset { margin: 0; padding: 0; border: 0; }
 .segmented { display: grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 4px; background: #edf1eb; }
 .segmented label { position: relative; cursor: pointer; }

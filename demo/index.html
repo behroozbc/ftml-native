@@ -40,6 +40,11 @@
                 </fieldset>
 
                 <div class="section-label options-label">02 / CONFIGURATION</div>
+                <label class="field-label" for="config-source">Config source</label>
+                <select id="config-source" class="demo-select">
+                    <option value="property">JavaScript property</option>
+                    <option value="attributes">HTML attributes</option>
+                </select>
                 <label class="toggle-row">
                     <span><strong>Hovers</strong><small>Interactive notation details</small></span>
                     <input id="hovers" type="checkbox" checked />
@@ -55,7 +60,14 @@
                     <input id="sections" type="checkbox" />
                     <span class="switch" aria-hidden="true"></span>
                 </label>
-
+                <label class="field-label" for="highlight-style">Highlight style attribute</label>
+                <select id="highlight-style" class="demo-select">
+                    <option value="">Not set</option>
+                    <option value="colored">Colored</option>
+                    <option value="subtle">Subtle</option>
+                    <option value="off">Off</option>
+                    <option value="none">None</option>
+                </select>
                 <button class="render-button" type="submit">
                     <span>Render preview</span><span aria-hidden="true">&#8594;</span>
                 </button>

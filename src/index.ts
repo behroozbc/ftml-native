@@ -25,7 +25,27 @@ const BOOLEAN_CONFIG_ATTRIBUTES: [string, keyof FtmlConfig][] = [
     ["pdf-link", "pdfLink"],
 ];
 
-const CONFIG_ATTRIBUTES = BOOLEAN_CONFIG_ATTRIBUTES.map(([attribute]) => attribute);
+const SCALAR_CONFIG_ATTRIBUTES: [string, keyof FtmlConfig][] = [
+    ["document-uri", "documentUri"],
+];
+
+const ENUM_CONFIG_ATTRIBUTES: [string, keyof FtmlConfig][] = [
+    ["highlight-style", "highlightStyle"],
+    ["toc", "toc"],
+];
+
+const JSON_CONFIG_ATTRIBUTES: [string, keyof FtmlConfig][] = [
+    ["toc-progress", "tocProgress"],
+    ["autoexpand-limit", "autoexpandLimit"],
+    ["problem-states", "problemStates"],
+];
+
+const CONFIG_ATTRIBUTES = [
+    ...BOOLEAN_CONFIG_ATTRIBUTES.map(([attribute]) => attribute),
+    ...SCALAR_CONFIG_ATTRIBUTES.map(([attribute]) => attribute),
+    ...ENUM_CONFIG_ATTRIBUTES.map(([attribute]) => attribute),
+    ...JSON_CONFIG_ATTRIBUTES.map(([attribute]) => attribute),
+];
 
 abstract class FtmlElement extends HTMLElement {
     static get observedAttributes(): string[] {
@@ -85,7 +105,19 @@ abstract class FtmlElement extends HTMLElement {
         this.unmount();
         const target = this.getMountPoint();
         const context = this._providedContext ?? this.findParentContext();
-        this._handle = this.mount(target, this.getConfig(), context);
+        try {
+            this._handle = this.mount(target, this.getConfig(), context);
+        } catch (error) {
+            this.dispatchEvent(
+                new CustomEvent("ftml-error", {
+                    detail: error instanceof Error
+                        ? error
+                        : new Error(String(error)),
+                    bubbles: true,
+                    composed: true,
+                }),
+            );
+        }
     }
 
     protected setRenderedContext(context: FtmlContext): void {
@@ -125,13 +157,73 @@ abstract class FtmlElement extends HTMLElement {
     }
 
     private getConfig(): FtmlConfig {
-        const config = { ...this._config };
+        const config: FtmlConfig = {};
         for (const [attribute, property] of BOOLEAN_CONFIG_ATTRIBUTES) {
             if (!this.hasAttribute(attribute)) continue;
             const value = this.getAttribute(attribute)?.toLowerCase();
             (config as Record<string, unknown>)[property] =
                 value !== "false" && value !== "0";
         }
+
+        for (const [attribute, property] of SCALAR_CONFIG_ATTRIBUTES) {
+            if (!this.hasAttribute(attribute)) continue;
+            (config as Record<string, unknown>)[property] =
+                this.getAttribute(attribute);
+        }
+
+        for (const [attribute, property] of ENUM_CONFIG_ATTRIBUTES) {
+            if (!this.hasAttribute(attribute)) continue;
+            const value = this.getAttribute(attribute)?.trim();
+            if (!value) continue;
+
+            if (property === "highlightStyle") {
+                const styles: Record<string, number> = {
+                    colored: 0,
+                    subtle: 1,
+                    off: 2,
+                    none: 3,
+                };
+                const numericValue = Number(value);
+                const style = Number.isFinite(numericValue) && numericValue >= 0 && numericValue <= 3
+                    ? numericValue
+                    : styles[value.toLowerCase()];
+                if (style !== undefined) {
+                    config.highlightStyle = style as FtmlConfig["highlightStyle"];
+                }
+            } else if (property === "toc") {
+                const toc = value.toLowerCase();
+                if (toc === "none" || toc === "extract" || toc === "get") {
+                    config.toc = toc[0].toUpperCase() + toc.slice(1) as FtmlConfig["toc"];
+                }
+            }
+        }
+
+        for (const [attribute, property] of JSON_CONFIG_ATTRIBUTES) {
+            if (!this.hasAttribute(attribute)) continue;
+            const value = this.getAttribute(attribute);
+            if (!value) continue;
+            try {
+                const parsed = JSON.parse(value);
+                if (property === "problemStates") {
+                    const entries = Array.isArray(parsed) ? parsed : [];
+                    config.problemStates = new Map(entries);
+                } else {
+                    (config as Record<string, unknown>)[property] = parsed;
+                }
+            } catch (error) {
+                this.dispatchEvent(
+                    new CustomEvent("ftml-error", {
+                        detail: error instanceof Error
+                            ? new Error(`Invalid ${attribute} attribute: ${error.message}`)
+                            : new Error(`Invalid ${attribute} attribute.`),
+                        bubbles: true,
+                        composed: true,
+                    }),
+                );
+            }
+        }
+
+        Object.assign(config, this._config);
         return config;
     }
 }
@@ -200,7 +292,6 @@ export class FtmlDocumentElement extends FtmlElement {
     }
 
     private optionsFromAttributes(): FtmlDocumentOptions | undefined {
-        
         const uri = this.getAttribute("uri");
         if (this.hasAttribute("html")) {
             return {
