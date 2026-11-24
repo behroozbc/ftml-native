@@ -1,6 +1,6 @@
 {
   "name": "@behroozbc/ftml-native",
-  "version": "0.0.34",
+  "version": "0.0.1",
   "description": "Native web components for rendering FTML content",
   "homepage": "https://github.com/behroozbc/ftml-native#readme",
   "repository": {
