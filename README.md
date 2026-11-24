@@ -3,7 +3,7 @@
 Framework-free FTML web components for browser applications.
 
 ```ts
-import { defineFtmlElements, initialize } from "@flexiformal/ftml-native";
+import { defineFtmlElements, initialize } from "@behroozbc/ftml-native";
 
 await initialize();
 defineFtmlElements();
