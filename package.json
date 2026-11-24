@@ -1,14 +1,14 @@
 {
-  "name": "@flexiformal/ftml-native",
+  "name": "@behroozbc/ftml-native",
   "version": "0.0.1",
   "description": "Native web components for rendering FTML content",
-  "homepage": "https://github.com/FlexiFormal/ftml-ts#readme",
+  "homepage": "https://github.com/behroozbc/ftml-native#readme",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/FlexiFormal/ftml-ts.git"
+    "url": "git+https://github.com/behroozbc/ftml-native.git"
   },
   "license": "GPL-3.0-or-later",
-  "author": "Dennis Müller",
+  "author": "Behrooz bozorgchamy",
   "types": "./dist/index.d.mts",
   "exports": {
     ".": {
