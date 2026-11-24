@@ -1,6 +1,6 @@
 # @behroozbc/ftml-native
-
-Framework-free FTML web components for browser applications.
+**This is alpha version.**
+Framework-free FTML web components for browser applications. 
 
 ```ts
 import { defineFtmlElements, initialize } from "@behroozbc/ftml-native";
